@@ -13,12 +13,14 @@ public interface Attribute
 	Map<String, String> getTags();
 	
 	List<String> getChildAttributesNames();
+
+	int childAttributesCount(String name);
 	
-	Attribute getChildAttribute (String name) throws IllegalArgumentException;
+	Attribute getChildAttribute (String name) ;
 	
-	Attribute getChildAttribute (String name, int number) throws IllegalArgumentException;
+	Attribute getChildAttribute (String name, int number);
 	
-	String getValue() throws NoSuchElementException;
+	String getValue();
 	
-	String getValue( String attribute ) throws IllegalArgumentException;
+	String getValue( String attribute );
 }
