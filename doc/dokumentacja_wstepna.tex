@@ -4,11 +4,11 @@
 \usepackage[T1]{fontenc}
 \frenchspacing
 \usepackage{indentfirst}
+\usepackage{listings}
 \author{Konrad Miziński}
 \title{Projekt TKOM - Dokumentacja wspępna}
 \hyphenation{XMLFile XMLElement}
-\hyphenpenalty=5000
-
+\hyphenpenalty=9000
 
 \begin{document}
 \maketitle
@@ -40,6 +40,44 @@ tzn. do wszystkich elmentów pliku wraz z ich nazwami, wartościami i atrybutami
 \end{itemize}
 
 \section{Wymiagania niefunkcjonalne}
+\begin{itemize}
+	\item Biblioteka dostarczona zostanie w postaci archiwum typu JAR.
+	\item Wraz z biblioteką dostarczony zostanie prosty program demonstrujący możliwości biblioteki.
+	Program bedzie pracował w trybie tekstowym.
+\end{itemize}
 
 
+\section{Algorytm parsowania plików xml}
+Pliki xml parsowane bedą za pomocą funkcji o następujących prototypach:
+
+\subsubsection*{Funcja parsujElement:}
+\begin{enumerate}
+	\item Znajdź początek najbiższego taga(''<'').
+	\item Znajdć koniec najibliższego taga(''>'').
+	\item Wywołaj funkcję parsujNazweIAtrybuty.
+	\item Jeśli pusty element (''<.../>'') to zakończ działanie funkcji.
+	\item W przeciwnym wypdaku znajdź tag kończący element (</...>)
+	\item Jeśli pusty element (<...></...>) to zakończ działanie funkcji.
+	\item W przeciwnym wypadku jeśli element zawiera nieotagowany tekst 
+	to zapamietaj wartosć elementu i zakończ działanie funkcji.
+	\item W przeciwnym wypadku wykonuj funkcję parsujElement aż do osiądniecia końcowego taga rozpatrywanego elemntu.
+\end{enumerate}
+
+\subsubsection*{Funcja parsujNazweIAtrybuty:}
+\begin{enumerate}
+	\item Znajdź pierwszy biały znak.
+	\item Tekst przed pierwszym białym znakiem potraktuj jako nazwe elementu.
+	\item Pomiń kolejne białe znaki
+	\item Jeśli napotkano koniec taga(''>'' lub ''/>'') to zakończ działania funcji.
+	\item W przeciwnym wypadku znajdź element ''=''
+	\item Tekst od ostatnio pominiętego białego znaku do znaku równości potraktuj jako nazwe atrybutu.
+	\item Pobierz znak następny po znaku "=" ('' lub ' - początek wartości atrybutu).
+	\item Znajdź następny znak taki jak znak początku wartości atrybutu (odpowiedznio '' lub ')
+	\item Test pomiedzy znakami '' (lub ') patraktuj jako wartość atrybutu.
+	\item Powrót do kroku 3.
+\end{enumerate}
+
+\section{Postawowe intefejsy}
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xml/XMLFile.java}
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xml/XMLElement.java}
 \end{document}

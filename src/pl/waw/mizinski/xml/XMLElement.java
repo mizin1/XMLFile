@@ -13,7 +13,7 @@ public interface XMLElement
 	
 	String getAttribute(String name);
 	
-	Map<String, String> getAttrinutes();
+	Map<String, String> getAttributes();
 	
 	List<String> getChildElementsNames();
 	
