@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\frenchspacing
+\usepackage{indentfirst}
+\author{Konrad Miziński}
+\title{Projekt TKOM - Dokumentacja wspępna}
+\hyphenation{XMLFile XMLElement}
+\hyphenpenalty=5000
+
+
+\begin{document}
+\maketitle
+
+\section{Treść projektu}
+Biblioteka java do obsługi plików XML.
+
+\section{Opis funkcjonalności}
+Dostarczona biblioteka powinna zawierać klasy umożliwiające dostęp do całej treści pliku xml,
+tzn. do wszystkich elmentów pliku wraz z ich nazwami, wartościami i atrybutami (reprezentowanymi przez ich nazwę i wartość).
+
+\section{Wymagania funkconalne}
+\begin{itemize}
+	\item Pliki xml są reprezentowane przez klasy impelementujące interfejs XMLFile,
+	ale alementy dzrzewa xml przez klasy implementujące interfejs XMLElement.
+	Kody źródłowe tych interfejsów zastały zamieszczone w dalszej częci dokumentacji.
+	\item Dostęp do poszczególnych elementów pliku xml odbywa się na zasadzię drzewa,
+	tzn dostęp do dowoleno elementu różnego od elementu nadzrzędnego,
+	możliwy jest jedynie poprzez jego rodzica w drzewie xml.
+	\item Na każdym poziomie drzewa xml istnieje możliwośc pobrania danego elementu w formie tekstowej
+	(metoda getContent())
+	\item Dostęp do klasy reprezentującej plik xml można uzyskać za pomocą obiektu typu "Factory",
+	udostępniającego statyczne motody tworzące obiekty typu XMLFile.
+	\item Obiekty typy XMLFile mogą być tworzone na podstawie ścieżki do pliku.xml
+	lub obiektu typu java.io.File ze standardowej biblioteki Javy.
+	\item W przypadku niepowodzenia utworzenia obiektu typu, rzucany jest zdefininiowany uprzednio
+	wyjatek typu XMLParseException. Klasy XMLFile i XMLElement nie rzucają już żadnych wyjątków.
+	\item Do biblioteki dołączona jest dokumentacja wygenerowana przez javadoc.	
+\end{itemize}
+
+\section{Wymiagania niefunkcjonalne}
+
+
+\end{document}

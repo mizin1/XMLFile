@@ -2,7 +2,7 @@ package pl.waw.mizinski.xml;
 
 public interface XMLFile
 {
-	Element getRootElement();
+	XMLElement getRootElement();
 	
 	String getContent();
 }
