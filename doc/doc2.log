@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2012.12.6)  15 DEC 2012 22:11
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2012.12.6)  15 DEC 2012 23:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**dokumentacja_wstepna.tex
-(./dokumentacja_wstepna.tex
+**doc2.tex
+(./doc2.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
 aded.
@@ -301,9 +301,8 @@ File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
 File: listings.cfg 2007/02/22 1.4 listings configuration
 ))
 Package: listings 2007/02/22 1.4 (Carsten Heinz)
-
-(./dokumentacja_wstepna.aux)
-\openout1 = `dokumentacja_wstepna.aux'.
+ (./doc2.aux)
+\openout1 = `doc2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
@@ -324,79 +323,46 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 14.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 14.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 25.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 22.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 25.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 22.
 
-Overfull \hbox (5.61496pt too wide) in paragraph at lines 25--28
-[]\T1/cmr/m/n/10 Pliki xml s¡ reprezen-towane przez klasy im-pele-men-tu-j¡ce i
-n-ter-fejs XMLFile,
+Overfull \hbox (1.22604pt too wide) in paragraph at lines 24--26
+[]\T1/cmr/m/n/10 Dodawanie, usuwanie, modawyfikacja wªa±-ci-wo±ci. W szczegól-n
+o±ci tworze-
  []
 
 
-Overfull \hbox (10.11386pt too wide) in paragraph at lines 25--28
-\T1/cmr/m/n/10 ale ale-menty dzrzewa xml przez klasy im-ple-men-tu-j¡ce in-ter-
-fejs XMLElement.
- []
-
-
-Overfull \hbox (1.67148pt too wide) in paragraph at lines 33--35
-[]\T1/cmr/m/n/10 Dost¦p do klasy reprezen-tu-j¡cej plik xml mo»na uzyska¢ za po
--moc¡ obiektu
- []
-
-
-Overfull \hbox (7.00351pt too wide) in paragraph at lines 35--37
-[]\T1/cmr/m/n/10 Obiekty typy XMLFile mog¡ by¢ twor-zone na pod-stawie ±cie»ki 
-do pliku.xml
- []
-
-
-Overfull \hbox (6.44699pt too wide) in paragraph at lines 37--39
-[]\T1/cmr/m/n/10 W przy-padku niepowodzenia ut-worzenia obiektu typu, rzu-cany 
-jest zdefinin-
+Overfull \hbox (31.49753pt too wide) in paragraph at lines 31--33
+[]\T1/cmr/m/n/10 Pliki kon-fig-u-ra-cyjne s¡ for-matu *.xml o sz-ty-wno zdefin-
+iowanej struk-turze(opisanej
  []
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (17.30655pt too wide) in paragraph at lines 75--76
-[]\T1/cmr/m/n/10 Znajd¹ nast¦pny znak taki jak znak pocz¡tku warto±ci atry-butu
- (odpowiedznio
- []
-
-(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2004/09/05 1.3 listings language file
-) [2]
-(../src/pl/waw/mizinski/xml/XMLFile.java)
-(../src/pl/waw/mizinski/xml/XMLElement.java
-Overfull \hbox (20.91344pt too wide) in paragraph at lines 26--28
-[][][][][][][][][][][][][][][][][] 
- []
-
-) [3] (./dokumentacja_wstepna.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./doc2.aux) ) 
 Here is how much of TeX's memory you used:
- 2828 strings out of 495059
- 34280 string characters out of 3182030
- 117174 words of memory out of 3000000
- 6015 multiletter control sequences out of 15000+200000
- 10990 words of font info for 29 fonts, out of 3000000 for 9000
+ 2433 strings out of 495059
+ 30301 string characters out of 3182030
+ 82382 words of memory out of 3000000
+ 5633 multiletter control sequences out of 15000+200000
+ 10214 words of font info for 28 fonts, out of 3000000 for 9000
  16 hyphenation exceptions out of 8191
- 26i,6n,43p,199b,1092s stack positions out of 5000i,500n,10000p,200000b,50000s
- </home/mizin/.texmf-var/fonts/pk/ljfour/jk
-nappen/ec/ecbx1000.600pk> </home/mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/e
-crm1000.600pk> </home/mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600
-pk> </home/mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/
-mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on dokumentacja_wstepna.pdf (3 pages, 68555 bytes).
+ 26i,6n,32p,199b,219s stack positions out of 5000i,500n,10000p,200000b,50000s
+ </home/
+mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home/mizin/.texm
+f-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/mizin/.texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/mizin/.texmf-var/fonts/pk/ljfour/
+jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy10.pfb>
+Output written on doc2.pdf (2 pages, 50395 bytes).
 PDF statistics:
- 221 PDF objects out of 1000 (max. 8388607)
- 31 compressed objects within 1 object stream
+ 160 PDF objects out of 1000 (max. 8388607)
+ 25 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

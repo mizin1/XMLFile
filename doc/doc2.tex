@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\frenchspacing
+\usepackage{indentfirst}
+\usepackage{listings}
+\author{Konrad Miziński}
+\title{Projekt TKOM - Dokumentacja wspępna}
+\hyphenation{XMLFile XMLElement}
+\hyphenpenalty=9000
+
+\begin{document}
+\maketitle
+
+\section{Treść projektu}
+Biblioteka java do obsługi plików konfiguracyjnych XML.
+
+\section{Cel projektu}
+Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
+\begin{itemize}
+	\item Odczyt z pliku konfiguracyjnego właściwości (reprzezentowanych jako pary nazwa-wwartość)
+	pogrupowanych w sekcje.
+	\item Dodawanie, usuwanie, modawyfikacja właściwości. W szczególności tworzenie własnych obiektów 
+	zawierająch zdefiniowane przez użytkownika właściwości.
+	\item Serializajca i zapis do pliku zmodyfikowanych/utworzonych obiektów.
+\end{itemize}
+
+\section{Wymagania funkcjonalne}
+\begin{itemize}
+	\item Pliki konfiguracyjne są formatu *.xml o sztywno zdefiniowanej strukturze(opisanej 
+	w dalszej części dokumentacji).
+	\item Właściwości zawarte w pliku konfiguracyjnym reprezentowanie są przez pary nazwa-wartość.
+	\item Właściwości są pogrupowane w sekcje.
+	\item Sekcje reprezentowane są przez unikalne nazwy sekcji.
+	\item Dopuszczalne są sekcje puste.
+	\item Nazwy właściwości są unikalne w ramach sekcji.
+	\item Wartości właściwości mogą być puste.
+	\item Pliki konfiguracyjne reprezentowane są przez klasy implementujące interfejs PropertiesFile,
+	sekcje przez klasy implementujące interfejs Section,
+	a włąściwości przez klasy imlementujące intefejs Property;
+	Kody źródłowe tych interfejsów zostały zamieszczone w dalszej części dokumentacji.
+	\item Dostęp do klasy reprezentującej plik właściwości można uzyskać za pomocą obiektu typu
+	"Factory", udostępniającego metody tworzące obiekty typu PropertiesFile.
+	Ta sama klasa odpowiada zapis obiektów PropertiesFile do pliku. 
+	\item Do biblioteki dołączona jest dokumentacja wygenerowana przez javadoc.
+\end{itemize}
+
+\section{Wymiagania niefunkcjonalne}
+\begin{itemize}
+	\item Biblioteka dostarczona zostanie w postaci archiwum typu JAR.
+	\item Wraz z biblioteką dostarczony zostanie prosty program demonstrujący możliwości biblioteki.
+	Program bedzie pracował w trybie tekstowym.
+\end{itemize}
+
+
+
+\end{document}
