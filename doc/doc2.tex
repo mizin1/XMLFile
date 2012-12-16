@@ -53,6 +53,30 @@ Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
 	Program bedzie pracował w trybie tekstowym.
 \end{itemize}
 
+\section{Przykładowy plik konfiguracyjny}
+\lstinputlisting[language=Xml]{./example.xml}
+
+\section{Analiza składni}
+Składnia plików konfiguracyjnych jest uproszczoną składnią języka xml.
+Piniżej zapisania w natoacji EBNF:
+
+\begin{verbatim} 
+	document ::= prolog element
+	element	::=	EmptyElemTag | STag content ETag
+	EmptyElemTag ::= '<'  Name (S Attribute)* S? '/>'
+	Attribute ::=	 Name Eq AttValue	
+	AttValue ::= '"' Text '"'
+	STag ::= '<'  Name (S Attribute)* S? '>'
+	ETag	::=	'</' Name S? '>'
+	content	::=	(element* | Text)
+	Name ::= Letter NameChar*
+	Text ::= NameChar*
+	Letter ::= [a-zA-Z]
+	NameChar ::= Letter | [0-9] | '.' | '-' | '_' | ':' | #x20
+	S ::= (#x20 | #x09 | #x0D | #x0A)+
+	Eq ::= S? '=' S?
+\end{verbatim}
+
 
 
 \end{document}
