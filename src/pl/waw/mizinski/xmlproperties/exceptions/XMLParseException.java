@@ -1,4 +1,4 @@
-package pl.waw.mizinski.xml.exceptions;
+package pl.waw.mizinski.xmlproperties.exceptions;
 
 public class XMLParseException extends Exception {
 

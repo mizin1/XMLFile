@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2012.12.6)  16 DEC 2012 14:21
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2012.12.6)  16 DEC 2012 22:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -323,67 +323,120 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 14.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 14.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 22.
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+(./doc2.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 8.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 8.
+)
+\tf@toc=\write3
+\openout3 = `doc2.toc'.
+
+ [1
+
+]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 25.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 22.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 25.
 
-Overfull \hbox (1.22604pt too wide) in paragraph at lines 24--26
-[]\T1/cmr/m/n/10 Dodawanie, usuwanie, modawyfikacja wªa±-ci-wo±ci. W szczegól-n
-o±ci tworze-
- []
-
-
-Overfull \hbox (31.49753pt too wide) in paragraph at lines 31--33
+Overfull \hbox (31.49753pt too wide) in paragraph at lines 34--36
 []\T1/cmr/m/n/10 Pliki kon-fig-u-ra-cyjne s¡ for-matu *.xml o sz-ty-wno zdefin-
 iowanej struk-turze(opisanej
  []
 
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+[2] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2004/09/05 1.3 listings language file
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
-) (./example.xml
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 1.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 1.
+) (./example.xml)
+[3]
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 82.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-Overfull \hbox (8.11188pt too wide) in paragraph at lines 60--62
-[]\T1/cmr/m/n/10 Skªadnia plików kon-fig-u-ra-cyjnych jest up-roszc-zon¡ skªad-
-ni¡ j¦zyka xml. Pini»ej
+Overfull \hbox (17.50365pt too wide) in paragraph at lines 90--103
+ [] 
  []
 
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 63.
-(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-) [2] [3] (./doc2.aux) ) 
-Here is how much of TeX's memory you used:
- 2819 strings out of 495059
- 34404 string characters out of 3182030
- 111949 words of memory out of 3000000
- 6004 multiletter control sequences out of 15000+200000
- 11303 words of font info for 30 fonts, out of 3000000 for 9000
- 16 hyphenation exceptions out of 8191
- 31i,6n,52p,199b,1180s stack positions out of 5000i,500n,10000p,200000b,50000s
- </home/mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ec
-tt1000.600pk> </home/mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1000.600p
-k> </home/mizin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home/m
-izin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/mizin/.texmf
--var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/mizin/.texmf-var/fonts/
-pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmsy10.pfb>
-Output written on doc2.pdf (3 pages, 74483 bytes).
-PDF statistics:
- 254 PDF objects out of 1000 (max. 8388607)
- 35 compressed objects within 1 object stream
- 0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+[4]
+Overfull \hbox (1.4154pt too wide) in paragraph at lines 130--130
+[]\T1/cmtt/m/n/10 EmptyElementTag = OpenStartTag, {Attribute}, CloseEmptyElemen
+tTag;[] 
+ []
 
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+)
+(../src/pl/waw/mizinski/xmlproperties/xml/XMLElement.java
+Overfull \hbox (116.89073pt too wide) in paragraph at lines 5--6
+[][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (80.89925pt too wide) in paragraph at lines 6--8
+[][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (158.8808pt too wide) in paragraph at lines 22--24
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (164.87938pt too wide) in paragraph at lines 26--28
+[][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (146.88364pt too wide) in paragraph at lines 28--30
+[][][][][][][][][][][][][][][][] 
+ []
+
+[5]
+Overfull \hbox (98.89499pt too wide) in paragraph at lines 32--33
+[][][][][][][][][][][][][][][][] 
+ []
+
+) (../src/pl/waw/mizinski/xmlproperties/xml/XMLAttribute.java)
+Overfull \hbox (6.83075pt too wide) in paragraph at lines 137--142
+\T1/cmr/m/n/10 dawa¢/usuwa¢/edy-towa¢ wªa±-ci-wo±ci za-warte w pliku kon-fig-u-
+ra-cyjnym. Wykonuje
+ []
+
+(../src/pl/waw/mizinski/xmlproperties/properties/PropertiesFile.java
+Overfull \hbox (80.89925pt too wide) in paragraph at lines 5--7
+[][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (98.89499pt too wide) in paragraph at lines 15--16
+[][][][][][][][][][][][][][][][] 
+ []
+
+) [6] (../src/pl/waw/mizinski/xmlproperties/properties/Section.java
+Overfull \hbox (80.89925pt too wide) in paragraph at lines 5--7
+[][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (116.89073pt too wide) in paragraph at lines 19--20
+[][][][][][][][][][][][][][][][] 
+ []
+
+) (../src/pl/waw/mizinski/xmlproperties/properties/Property.java) [7]
+(./doc2.aux) ) 
+Here is how much of TeX's memory you used:
+ 2939 strings out of 495060
+ 36516 string characters out of 3182053
+ 116553 words of memory out of 3000000
+ 6101 multiletter control sequences out of 15000+200000
+ 12079 words of font info for 31 fonts, out of 3000000 for 9000
+ 16 hyphenation exceptions out of 8191
+ 27i,7n,52p,213b,1641s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on doc2.dvi (7 pages, 20216 bytes).

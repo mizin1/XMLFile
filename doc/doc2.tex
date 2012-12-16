@@ -13,15 +13,18 @@
 \begin{document}
 \maketitle
 
+
+\tableofcontents
+\newpage
 \section{Treść projektu}
 Biblioteka java do obsługi plików konfiguracyjnych XML.
 
 \section{Cel projektu}
 Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
 \begin{itemize}
-	\item Odczyt z pliku konfiguracyjnego właściwości (reprzezentowanych jako pary nazwa-wwartość)
+	\item Odczyt z pliku konfiguracyjnego właściwości (reprzezentowanych jako pary nazwa-wartość)
 	pogrupowanych w sekcje.
-	\item Dodawanie, usuwanie, modawyfikacja właściwości. W szczególności tworzenie własnych obiektów 
+	\item Dodawanie, usuwanie, modyfikacja właściwości. W szczególności tworzenie własnych obiektów 
 	zawierająch zdefiniowane przez użytkownika właściwości.
 	\item Serializajca i zapis do pliku zmodyfikowanych/utworzonych obiektów.
 \end{itemize}
@@ -38,11 +41,11 @@ Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
 	\item Wartości właściwości mogą być puste.
 	\item Pliki konfiguracyjne reprezentowane są przez klasy implementujące interfejs PropertiesFile,
 	sekcje przez klasy implementujące interfejs Section,
-	a włąściwości przez klasy imlementujące intefejs Property;
+	a właściwości przez klasy imlementujące intefejs Property;
 	Kody źródłowe tych interfejsów zostały zamieszczone w dalszej części dokumentacji.
 	\item Dostęp do klasy reprezentującej plik właściwości można uzyskać za pomocą obiektu typu
 	"Factory", udostępniającego metody tworzące obiekty typu PropertiesFile.
-	Ta sama klasa odpowiada zapis obiektów PropertiesFile do pliku. 
+	Ta sama klasa odpowiada za zapis obiektów PropertiesFile do pliku. 
 	\item Do biblioteki dołączona jest dokumentacja wygenerowana przez javadoc.
 \end{itemize}
 
@@ -56,27 +59,89 @@ Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
 \section{Przykładowy plik konfiguracyjny}
 \lstinputlisting[language=Xml]{./example.xml}
 
-\section{Analiza składni}
-Składnia plików konfiguracyjnych jest uproszczoną składnią języka xml.
-Piniżej zapisania w natoacji EBNF:
+\newpage
+\section{Projekt realizacji}
+
+\subsection{Podział na moduły}
+Biblioteka bedzie składała się z 2 podstawowych modułów:
+\begin{itemize}
+	\item Moduł obsługi plików xml - oddpowiada za analizę leksykalną i składniową plików xml.
+	Służy do tworzenia struktur danych odpowiadających poszczególnym składowym drzewa xml.
+	Odpowiada za odczyt i zapis do pliku *.xml. Jest niewidoczny dla użytkownika biblioteki.
+	\item Moduł API użytkownika - dostarcza metod implementujących zadania biblioteki.
+	Wykorzystuje obiekty z modułu pierwszego.
+\end{itemize}
+
+\subsection{Moduł obsługi plików xml}
+
+
+\subsubsection{Analizator leksykalny(Lekser)}
+Lexer ma za zadanie rozbić wczytany z pliku text na leksemy.
+Na ich podstawie zostają ropoznane tokeny, którym w szczególnych przypadkach przypisywane są wartości.
+W poniższej tabeli zamieszczono rozpoznawane przez lexer tokeny wraz z przykładami dla podanego fragmentu pliku xml: 
+\begin{verbatim}
+<?xml version="1.0" encoding="ASCII"?>
+...
+<property name="nazwa">value1</property>
+<property/>
+\end{verbatim} 
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline  
+    Leksem & Token & Wartość \\ \hline 
+    <property & OpenStartTag & property\\ \hline 
+    <$\backslash$property & OpenEndTag & property\\ \hline 
+    > & CloseTag &\\ \hline 
+    $\backslash$> & CloseEmptyElementTag & \\ \hline 
+    name & AttributeName & name \\ \hline
+    = & Equals & \\ \hline
+    ''nazwa'' & AttributeValue & nazwa \\ \hline
+    value1 & Text & value1  \\ \hline
+    <?xml version=''1.0'' encoding=''ASCI''?> & Prolog &  \\ \hline
+    \end{tabular}
+\end{center}
+
+Nazwy elemetów i atrybutów powinny spełniać następujące wyrażenie\\
+regularne:
+\begin{verbatim}
+[a-ZA-Z]([a-zA-Z] | [0-9] | '.' | '-' | '_')*
+\end{verbatim} 
+Zaś wartości elementów(token ''Text''):
+\begin{verbatim}
+([a-zA-Z] | [0-9] | '.' | '-' | '_')*
+\end{verbatim}
+Przyporządkowanie lexemów do tokenów nie zależy tylko od spełnienia wyrażenia regularnego, ale również od stanu w jakim znajdował się lexer po dopasowaniu ostatniego lexema
+(np. rozpoznanie tokena ''Text'' może mastąpić tylko jeśli poprzednio został rozpoznany token ''CloseTag'').
+
+\subsubsection{Analizator składniowy(Parser)}
+Po analizie leksykalnej dane są poddawane analizie składniowej.
+Parser stara się utworzyć drzewo składni na podstawie następującej gramatyki
+(uproszczonej gramatyki drzewa xml):
 
 \begin{verbatim} 
-	document ::= prolog element
-	element	::=	EmptyElemTag | STag content ETag
-	EmptyElemTag ::= '<'  Name (S Attribute)* S? '/>'
-	Attribute ::=	 Name Eq AttValue	
-	AttValue ::= '"' Text '"'
-	STag ::= '<'  Name (S Attribute)* S? '>'
-	ETag	::=	'</' Name S? '>'
-	content	::=	(element* | Text)
-	Name ::= Letter NameChar*
-	Text ::= NameChar*
-	Letter ::= [a-zA-Z]
-	NameChar ::= Letter | [0-9] | '.' | '-' | '_' | ':' | #x20
-	S ::= (#x20 | #x09 | #x0D | #x0A)+
-	Eq ::= S? '=' S?
+	Document = Prolog, Element;
+	Element	= EmptyElementTag | StartTag, Content, EndTag;
+	EmptyElementTag = OpenStartTag, {Attribute}, CloseEmptyElementTag;
+	Attribute = AttributeName, Equals, AttributeValue;
+	StartTag = OpenStartTag, {Attribute}, CloseTag;
+	EndTag = OpenEndTag, CloseTag;
+	Content	= {Element} | Text;
 \end{verbatim}
+	
+Elementy drzewa xml będą opakowane w klasy o następujących interfejsach:
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/xml/XMLElement.java}
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/xml/XMLAttribute.java}
 
-
+\subsection{Moduł API użytkownika}
+Moduł ten ma za zadanie dostarczyć użytkownikowi klas pozwalających dodawać/usuwać/edytować
+właściwości zawarte w pliku konfiguracyjnym.
+Wykonuje on swoje zadania poprzez delegację do obiektów modułu pierwszego,
+ukrywając tym samym przez użytkownikiem strukturę pliku xml.
+Klasy wchodzące w skład tego modułu bedą implementowały następujące interfejsy:
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/properties/PropertiesFile.java}
+\newpage
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/properties/Section.java}
+\lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/properties/Property.java}
 
 \end{document}

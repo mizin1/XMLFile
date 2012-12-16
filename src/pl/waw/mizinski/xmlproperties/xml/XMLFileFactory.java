@@ -1,8 +1,8 @@
-package pl.waw.mizinski.xml;
+package pl.waw.mizinski.xmlproperties.xml;
 
 import java.io.File;
 
-import pl.waw.mizinski.xml.exceptions.XMLParseException;
+import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
 
 public class XMLFileFactory 
 {

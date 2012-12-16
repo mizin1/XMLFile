@@ -1,4 +1,4 @@
-package pl.waw.mizinski.xml;
+package pl.waw.mizinski.xmlproperties.xml;
 
 public interface XMLFile
 {
