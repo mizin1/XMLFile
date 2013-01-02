@@ -4,13 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
+import pl.waw.mizinski.xmlproperties.lexer.token.AttributeName;
+import pl.waw.mizinski.xmlproperties.lexer.token.AttributeValue;
 import pl.waw.mizinski.xmlproperties.lexer.token.CloseTag;
+import pl.waw.mizinski.xmlproperties.lexer.token.Equals;
 import pl.waw.mizinski.xmlproperties.lexer.token.Text;
 import pl.waw.mizinski.xmlproperties.lexer.token.Token;
 
 public class Lexer
 {
-	private String text;
+	private final String text;
 
 	private List<Token> tokens;
 
@@ -38,6 +41,10 @@ public class Lexer
 			{
 				processWhiteCharacter();
 			}
+			else if (shouldExpectText())
+			{
+				expectText();
+			}
 			else if (nextChar == '<')
 			{
 				expectOpenTag();
@@ -54,17 +61,13 @@ public class Lexer
 			{
 				expectEquals();
 			}
-			else if (shouldAttributeValueExpect(nextChar))
+			else if (shouldExpectAttributeValue(nextChar))
 			{
 				expectAttributeValue();
 			}
-			else if (shouldAttributeNameExpect())
-			{
-				expectAttributeName();
-			}
 			else
 			{
-				expectText();
+				expectAttributeName();
 			}
 		}
 	}
@@ -74,27 +77,29 @@ public class Lexer
 		return position == text.length();
 	}
 
-	private boolean shouldAttributeNameExpect()
+	private boolean shouldExpectText()
 	{
-		if (CloseTag.class.isInstance(getLastToken()))
-		{
-			return false;
-		}
-		return true;
+		return CloseTag.class.isInstance(getLastToken());
 	}
 
-	private boolean shouldAttributeValueExpect(char c)
+	private boolean shouldExpectAttributeValue(char c)
 	{
 		return c == '"' | c == '\'';
 	}
 
 	private void expectText()
 	{
-		// TODO zrob obsuge znakow z ampersantem
 		StringBuilder value = new StringBuilder();
-		while(getNextChar() != '<')
+		while (getNextChar() != '<')
 		{
-			value.append(popNextChar());
+			if (getNextChar() == '&')
+			{
+				value.append(processSpecialCharacter());
+			}
+			else
+			{
+				value.append(popNextChar());
+			}
 		}
 		Text text = new Text();
 		text.setValue(value.toString());
@@ -103,20 +108,50 @@ public class Lexer
 
 	private void expectAttributeName()
 	{
-		// TODO Auto-generated method stub
-
+		// TODO mozesz dorobic inna obsluge pierwszego znaku w nazwie
+		StringBuilder name = new StringBuilder();
+		char nextChar = getNextChar();
+		while (!isWhiteCharacter(nextChar) && nextChar != '=')
+		{
+			if (getNextChar() == '&')
+			{
+				name.append(processSpecialCharacter());
+			}
+			else
+			{
+				name.append(popNextChar());
+			}
+		}
+		AttributeName attributeName = new AttributeName();
+		attributeName.setValue(name.toString());
+		tokens.add(attributeName);
 	}
 
 	private void expectAttributeValue()
 	{
-		// TODO Auto-generated method stub
-
+		StringBuilder value = new StringBuilder();
+		char endingChar = popNextChar();
+		char nextChar = getNextChar();
+		while (nextChar != endingChar)
+		{
+			if (getNextChar() == '&')
+			{
+				value.append(processSpecialCharacter());
+			}
+			else
+			{
+				value.append(popNextChar());
+			}
+		}
+		AttributeValue attributeValue = new AttributeValue();
+		attributeValue.setValue(value.toString());
+		tokens.add(attributeValue);
 	}
 
 	private void expectEquals()
 	{
-		// TODO Auto-generated method stub
-
+		popNextChar();
+		tokens.add(new Equals());
 	}
 
 	private void expectCloseEmptyElementTag()
@@ -174,5 +209,11 @@ public class Lexer
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	private char processSpecialCharacter()
+	{
+		// TODO
+		return '<';
 	}
 }
