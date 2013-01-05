@@ -4,6 +4,7 @@ public class OpenStartTag extends OpenTag
 {
 	private String value;
 	
+	@Override
 	public void setValue(String value)
 	{
 		this.value = value;

@@ -1,13 +1,19 @@
 package pl.waw.mizinski.xmlproperties.lexer;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
 import pl.waw.mizinski.xmlproperties.lexer.token.AttributeName;
 import pl.waw.mizinski.xmlproperties.lexer.token.AttributeValue;
+import pl.waw.mizinski.xmlproperties.lexer.token.CloseEmptyElementTag;
 import pl.waw.mizinski.xmlproperties.lexer.token.CloseTag;
 import pl.waw.mizinski.xmlproperties.lexer.token.Equals;
+import pl.waw.mizinski.xmlproperties.lexer.token.OpenEndTag;
+import pl.waw.mizinski.xmlproperties.lexer.token.OpenStartTag;
+import pl.waw.mizinski.xmlproperties.lexer.token.OpenTag;
+import pl.waw.mizinski.xmlproperties.lexer.token.Prolog;
 import pl.waw.mizinski.xmlproperties.lexer.token.Text;
 import pl.waw.mizinski.xmlproperties.lexer.token.Token;
 
@@ -21,8 +27,15 @@ public class Lexer
 
 	public Lexer(String text) throws XMLParseException
 	{
-		this.text = text;
-		tokenize();
+		try
+		{
+			this.text = text;
+			tokenize();
+		}
+		catch (Exception e)
+		{
+			throw new XMLParseException(e);
+		}
 	}
 
 	public List<Token> getTokens()
@@ -30,7 +43,7 @@ public class Lexer
 		return tokens;
 	}
 
-	private void tokenize()
+	private void tokenize() throws XMLParseException
 	{
 		tokens = new LinkedList<Token>();
 		expectProlog();
@@ -74,7 +87,7 @@ public class Lexer
 
 	private boolean hasMoreLetters()
 	{
-		return position == text.length();
+		return position < text.length();
 	}
 
 	private boolean shouldExpectText()
@@ -110,8 +123,7 @@ public class Lexer
 	{
 		// TODO mozesz dorobic inna obsluge pierwszego znaku w nazwie
 		StringBuilder name = new StringBuilder();
-		char nextChar = getNextChar();
-		while (!isWhiteCharacter(nextChar) && nextChar != '=')
+		while (!isWhiteCharacter(getNextChar()) && getNextChar() != '=')
 		{
 			if (getNextChar() == '&')
 			{
@@ -131,8 +143,7 @@ public class Lexer
 	{
 		StringBuilder value = new StringBuilder();
 		char endingChar = popNextChar();
-		char nextChar = getNextChar();
-		while (nextChar != endingChar)
+		while (getNextChar() != endingChar)
 		{
 			if (getNextChar() == '&')
 			{
@@ -143,6 +154,7 @@ public class Lexer
 				value.append(popNextChar());
 			}
 		}
+		popNextChar();
 		AttributeValue attributeValue = new AttributeValue();
 		attributeValue.setValue(value.toString());
 		tokens.add(attributeValue);
@@ -154,29 +166,71 @@ public class Lexer
 		tokens.add(new Equals());
 	}
 
-	private void expectCloseEmptyElementTag()
+	private void expectCloseEmptyElementTag() throws XMLParseException
 	{
-		// TODO Auto-generated method stub
-
+		popNextChar();
+		if (getNextChar() == '>')
+		{
+			popNextChar();
+			tokens.add(new CloseEmptyElementTag());
+		}
+		else
+		{
+			throw new XMLParseException(String.format("'>' character expected at position: '%d'", position));
+		}
 	}
 
 	private void expectCloseTag()
 	{
-		// TODO Auto-generated method stub
-
+		popNextChar();
+		tokens.add(new CloseTag());
 	}
 
-	// powinna wywolac expectOpen Start/End tag
+	
 	private void expectOpenTag()
 	{
-		// TODO Auto-generated method stub
+		popNextChar();
+		OpenTag openTag;
+		if (getNextChar()=='/')
+		{
+			popNextChar();
+			openTag = new OpenEndTag();
+		}
+		else
+		{
+			openTag = new OpenStartTag();
+		}
+		StringBuilder name = new StringBuilder();
+		while (!isWhiteCharacter(getNextChar()) && getNextChar() != '/' && getNextChar() !='>' )
+		{
+			if (getNextChar() == '&')
+			{
+				name.append(processSpecialCharacter());
+			}
+			else
+			{
+				name.append(popNextChar());
+			}
 
+		}
+		openTag.setValue(name.toString());
+		tokens.add(openTag);
 	}
 
-	private void expectProlog()
+	private void expectProlog() throws XMLParseException
 	{
-		// TODO Auto-generated method stub
-
+		char first = popNextChar();
+		char second = popNextChar();
+		if(!(first == '<' && second == '?'))
+		{
+			throw new XMLParseException("Prolog is expected at the begining of the document");
+		}
+		while(!(first == '?' && second == '>'))
+		{
+			first = second;
+			second = popNextChar();
+		}
+		tokens.add(new Prolog());
 	}
 
 	private char getNextChar()
@@ -201,19 +255,19 @@ public class Lexer
 
 	private static boolean isWhiteCharacter(char c)
 	{
-		// TODO
-		return c == ' ';
+		List<Character> whiteCharacters = Arrays.asList(' ', '\t', '\n', '\r'); 
+		return whiteCharacters.contains(c);
 	}
 
 	private void processWhiteCharacter()
 	{
-		// TODO Auto-generated method stub
-
+		popNextChar();
 	}
 
 	private char processSpecialCharacter()
 	{
 		// TODO
-		return '<';
+		popNextChar();
+		return '&';
 	}
 }
