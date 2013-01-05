@@ -1,11 +1,11 @@
 package pl.waw.mizinski.xmlproperties.lexer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Categories.ExcludeCategory;
 
 import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
 import pl.waw.mizinski.xmlproperties.lexer.token.AttributeName;
@@ -47,7 +47,7 @@ public class LexerTest
 	public void shouldRaiseException(){
 		try{
 			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>rihgofeiuhvnuieh";
-			Lexer lexer = new Lexer(xml);
+			new Lexer(xml);
 			fail();
 		}
 		catch (XMLParseException e)

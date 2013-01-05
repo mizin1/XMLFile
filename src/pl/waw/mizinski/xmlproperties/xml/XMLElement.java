@@ -9,7 +9,7 @@ public interface XMLElement
 {
 	String getName();
 	
-	String setName(String name);
+	void setName(String name);
 	
 	boolean isComplexElement();
 	
@@ -29,5 +29,5 @@ public interface XMLElement
 	
 	String getValue();
 	
-	String setValue(String value) throws CanNotUpdateElementException;
+	void setValue(String value) throws CanNotUpdateElementException;
 }
