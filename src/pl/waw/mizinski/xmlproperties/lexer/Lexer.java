@@ -187,7 +187,7 @@ public class Lexer
 	}
 
 	
-	private void expectOpenTag()
+	private void expectOpenTag() throws XMLParseException
 	{
 		popNextChar();
 		OpenTag openTag;
@@ -213,6 +213,7 @@ public class Lexer
 			}
 
 		}
+		checkName(name.toString());
 		openTag.setValue(name.toString());
 		tokens.add(openTag);
 	}
@@ -269,5 +270,14 @@ public class Lexer
 		// TODO
 		popNextChar();
 		return '&';
+	}
+	
+	private void checkName(String name) throws XMLParseException
+	{
+		if (name == null || name.equals(""))
+		{
+			throw new XMLParseException(String.format("Element name is expected at position: '%d'", position));
+		}
+
 	}
 }

@@ -60,6 +60,11 @@ public class XMLElementImpl implements XMLElement
 		attributes.add(attribute);
 	}
 
+	public void setAttributes(List<XMLAttribute> attributes)
+	{
+		this.attributes = attributes;
+	}
+
 	@Override
 	public void removeAttribute(XMLAttribute attribute) throws MissingObjectException
 	{
@@ -78,6 +83,19 @@ public class XMLElementImpl implements XMLElement
 	public List<XMLElement> getChildElements()
 	{
 		return elements;
+	}
+	
+	public void setChildElements(List<XMLElement> elements)
+	{
+		if (value == null || elements == null)
+		{
+			this.elements = elements;
+		}
+		else
+		{
+			throw new CanNotUpdateElementException(String.format(
+					"Can not set child elements in element with name: '%s'", name));
+		}
 	}
 
 	@Override
@@ -103,8 +121,7 @@ public class XMLElementImpl implements XMLElement
 		}
 		else
 		{
-			throw new MissingObjectException(String.format("Can not find element with name: '%s'",
-					element.getName()));
+			throw new MissingObjectException(String.format("Can not find element with name: '%s'", element.getName()));
 		}
 	}
 
@@ -123,8 +140,7 @@ public class XMLElementImpl implements XMLElement
 		}
 		else
 		{
-			throw new CanNotUpdateElementException(String.format(
-					"Can not set value of element with name: '%s'", name));
+			throw new CanNotUpdateElementException(String.format("Can not set value of element with name: '%s'", name));
 		}
 	}
 
