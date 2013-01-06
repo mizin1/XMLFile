@@ -1,16 +1,22 @@
 package pl.waw.mizinski.xmlproperties.parser;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
 import pl.waw.mizinski.xmlproperties.lexer.token.AttributeName;
+import pl.waw.mizinski.xmlproperties.lexer.token.AttributeValue;
 import pl.waw.mizinski.xmlproperties.lexer.token.CloseEmptyElementTag;
 import pl.waw.mizinski.xmlproperties.lexer.token.CloseTag;
+import pl.waw.mizinski.xmlproperties.lexer.token.Equals;
+import pl.waw.mizinski.xmlproperties.lexer.token.OpenEndTag;
 import pl.waw.mizinski.xmlproperties.lexer.token.OpenStartTag;
 import pl.waw.mizinski.xmlproperties.lexer.token.Prolog;
+import pl.waw.mizinski.xmlproperties.lexer.token.Text;
 import pl.waw.mizinski.xmlproperties.lexer.token.Token;
 import pl.waw.mizinski.xmlproperties.xml.XMLAttribute;
+import pl.waw.mizinski.xmlproperties.xml.XMLAttributeImpl;
 import pl.waw.mizinski.xmlproperties.xml.XMLElement;
 import pl.waw.mizinski.xmlproperties.xml.XMLElementImpl;
 import pl.waw.mizinski.xmlproperties.xml.XMLFile;
@@ -38,6 +44,7 @@ public class Parser
 	private void parse() throws XMLParseException
 	{
 		parseDocument();
+		checkEndOfDocument();
 	}
 
 	private void parseDocument() throws XMLParseException
@@ -64,6 +71,7 @@ public class Parser
 			}
 			else if (isNextTokenClassEquals(CloseTag.class))
 			{
+				popNextToken();
 				Content content = parseContent();
 				xmlElement.setValue(content.getValue());
 				xmlElement.setChildElements(content.getElements());
@@ -85,7 +93,7 @@ public class Parser
 	private void checkEndTag(String name) throws XMLParseException
 	{
 		boolean correct = true;
-		if (!isNextTokenClassEquals(OpenStartTag.class))
+		if (!isNextTokenClassEquals(OpenEndTag.class))
 		{
 			correct = false;
 		}
@@ -107,18 +115,47 @@ public class Parser
 		}
 	}
 
-	private Content parseContent()
+	private Content parseContent() throws XMLParseException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Content content = new Content();
+		if (isNextTokenClassEquals(Text.class))
+		{
+			content.setValue(popNextToken().getValue());
+			return content;
+		}
+		List<XMLElement> elements = new ArrayList<XMLElement>();
+		while(isNextTokenClassEquals(OpenStartTag.class))
+		{
+			elements.add(parseElement());
+		}
+		content.setElements(elements);
+		return content;
 	}
 
-	private List<XMLAttribute> parseAttributes()
+	private List<XMLAttribute> parseAttributes() throws XMLParseException
 	{
 		List<XMLAttribute> attributes = new LinkedList<XMLAttribute>();
 		while(isNextTokenClassEquals(AttributeName.class))
 		{
-			
+			XMLAttribute xmlAttribute = new XMLAttributeImpl();
+			xmlAttribute.setName(popNextToken().getValue());
+			if(isNextTokenClassEquals(Equals.class))
+			{
+				popNextToken();
+			}
+			else
+			{
+				throw new XMLParseException(String.format("'=' is expected after attribute withe name: '%s'", xmlAttribute.getName()));
+			}
+			if(isNextTokenClassEquals(AttributeValue.class))
+			{
+				xmlAttribute.setValue(popNextToken().getValue());
+			}
+			else
+			{
+				throw new XMLParseException(String.format("Attribute value is expected for attribute with name '%s'",xmlAttribute.getName()));
+			}
+			attributes.add(xmlAttribute);
 		}
 		
 		return attributes;
@@ -144,11 +181,6 @@ public class Parser
 	private Token popNextToken()
 	{
 		return tokens.get(position++);
-	}
-
-	private boolean hasMoreTokens()
-	{
-		return position < tokens.size();
 	}
 
 	private boolean isNextTokenClassEquals(Class<?> clazz)
@@ -182,5 +214,12 @@ public class Parser
 			this.elements = elements;
 		}
 	}
-
+	
+	private void checkEndOfDocument() throws XMLParseException
+	{
+		if(!(position<tokens.size()))
+		{
+			throw new XMLParseException("Invalid content found at and of document");
+		}
+	}
 }

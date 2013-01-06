@@ -278,6 +278,5 @@ public class Lexer
 		{
 			throw new XMLParseException(String.format("Element name is expected at position: '%d'", position));
 		}
-
 	}
 }
