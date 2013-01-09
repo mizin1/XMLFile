@@ -18,8 +18,7 @@ public class XMLFileImpl implements XMLFile
 	@Override
 	public String getContent()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "<?xml version=\"1.0\" encoding=\"ASCII\"?>"+rootElement;
 	}
 
 }

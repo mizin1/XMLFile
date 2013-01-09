@@ -87,7 +87,7 @@ public class XMLElementImpl implements XMLElement
 	
 	public void setChildElements(List<XMLElement> elements)
 	{
-		if (value == null || elements == null)
+		if (value == null || elements.isEmpty())
 		{
 			this.elements = elements;
 		}
@@ -197,4 +197,39 @@ public class XMLElementImpl implements XMLElement
 		return true;
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("<");
+		builder.append(name);
+		builder.append(" ");
+		for(XMLAttribute attribute : attributes)
+		{
+			builder.append(attribute);
+			builder.append(" ");
+		}
+		if (isEmty())
+		{
+			builder.append("/>");
+		}
+		else
+		{
+			builder.append(">");
+			if (isComplexElement())
+			{
+					for (XMLElement element : elements){
+						builder.append(element);
+					}
+			}
+			else
+			{
+				builder.append(value);
+			}
+			builder.append("</");
+			builder.append(name);
+			builder.append(">");
+		}
+		return builder.toString();
+	}
 }

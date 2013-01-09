@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<element name1="value1" name2='value2'>
+	<a c="b">d</a>
+	<a />
+	<a>qwerty</a>
+	<d>
+		<e></e>
+	</d>
+</element>

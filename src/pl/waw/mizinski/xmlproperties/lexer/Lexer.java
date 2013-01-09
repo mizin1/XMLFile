@@ -54,10 +54,6 @@ public class Lexer
 			{
 				processWhiteCharacter();
 			}
-			else if (shouldExpectText())
-			{
-				expectText();
-			}
 			else if (nextChar == '<')
 			{
 				expectOpenTag();
@@ -65,6 +61,10 @@ public class Lexer
 			else if (nextChar == '>')
 			{
 				expectCloseTag();
+			}
+			else if (shouldExpectText())
+			{
+				expectText();
 			}
 			else if (nextChar == '/')
 			{

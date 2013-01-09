@@ -118,17 +118,16 @@ public class Parser
 	private Content parseContent() throws XMLParseException
 	{
 		Content content = new Content();
+		List<XMLElement> elements = new ArrayList<XMLElement>();
+		content.setElements(elements);
 		if (isNextTokenClassEquals(Text.class))
 		{
 			content.setValue(popNextToken().getValue());
-			return content;
 		}
-		List<XMLElement> elements = new ArrayList<XMLElement>();
 		while(isNextTokenClassEquals(OpenStartTag.class))
 		{
 			elements.add(parseElement());
 		}
-		content.setElements(elements);
 		return content;
 	}
 
@@ -217,7 +216,7 @@ public class Parser
 	
 	private void checkEndOfDocument() throws XMLParseException
 	{
-		if(!(position<tokens.size()))
+		if((position<tokens.size()))
 		{
 			throw new XMLParseException("Invalid content found at and of document");
 		}
