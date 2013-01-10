@@ -8,7 +8,7 @@ public interface Section
 {
 	String getName();
 	
-	String setName(String name);
+	void setName(String name);
 	
 	List<Property> getProperties();
 	
@@ -17,4 +17,6 @@ public interface Section
 	void setPropertry(Property property);
 
 	void removeProperty(Property property) throws MissingObjectException;
+
+	void removeProperty(String propertyName) throws MissingObjectException;
 }
