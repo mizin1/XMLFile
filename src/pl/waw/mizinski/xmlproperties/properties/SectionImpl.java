@@ -80,5 +80,4 @@ public class SectionImpl implements Section
 		}
 		throw new MissingObjectException(String.format("Can not find propertry with name '%s'", propertyName));
 	}
-
 }

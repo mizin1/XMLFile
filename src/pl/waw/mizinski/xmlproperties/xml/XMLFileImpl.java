@@ -18,7 +18,13 @@ public class XMLFileImpl implements XMLFile
 	@Override
 	public String getContent()
 	{
-		return "<?xml version=\"1.0\" encoding=\"ASCII\"?>"+rootElement;
+		return "<?xml version=\"1.0\" encoding=\"ASCII\" ?>"+rootElement;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getContent();
 	}
 
 }
