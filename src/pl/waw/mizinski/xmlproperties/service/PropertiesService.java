@@ -50,16 +50,6 @@ public class PropertiesService
 		String content = getFileContent(file);
 		return getPropertiesFile(content);
 	}
-	
-	public PropertiesFile getEmptyPropertiesFile()
-	{
-		return new PropertiesFileImpl();
-	}
-	
-	public Section createNewSection(String sectionName)
-	{
-		return new SectionImpl(sectionName);
-	}
 
 	public String serailizePropertiesFile(PropertiesFile propertiesFile)
 	{

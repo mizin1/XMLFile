@@ -7,6 +7,21 @@ public class PropertyImpl implements Property
 	
 	private String value;
 	
+	public PropertyImpl(){}
+	
+	public PropertyImpl(String name)
+	{
+		super();
+		this.name = name;
+	}
+
+	public PropertyImpl(String name, String value)
+	{
+		super();
+		this.name = name;
+		this.value = value;
+	}
+
 	@Override
 	public String getName()
 	{

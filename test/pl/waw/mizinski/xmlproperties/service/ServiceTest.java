@@ -51,8 +51,8 @@ public class ServiceTest
 	public void shouldCreateEmptyPrpertiesFile() throws Exception
 	{
 		String expectedContent = "<?xml version=\"1.0\" encoding=\"ASCII\" ?><properties ><section name=\"sekcja1\" ><property name=\"test\" >true</property></section></properties>";
-		PropertiesFile propertiesFile = service.getEmptyPropertiesFile();
-		Section section = service.createNewSection("sekcja1");
+		PropertiesFile propertiesFile = PropertiesObjectsFactory.createEmptyPropertiesFile();
+		Section section = PropertiesObjectsFactory.createEmptySection("sekcja1");
 		section.setProperty("test", "true");
 		propertiesFile.addSection(section);
 		String content = service.serailizePropertiesFile(propertiesFile);
