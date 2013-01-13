@@ -10,11 +10,17 @@ public interface Section
 	
 	void setName(String name);
 	
+	boolean isEmpty();
+	
 	List<Property> getProperties();
 	
 	Property getPropertyByName(String name);
+	
+	String getPropertyValue(String name);
 
-	void setPropertry(Property property);
+	void setProperty(Property property);
+	
+	void setProperty(String name, String value);
 
 	void removeProperty(Property property) throws MissingObjectException;
 

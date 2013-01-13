@@ -9,4 +9,5 @@ public interface Property
 	String getValue();
 	
 	void setValue(String value);
+	
 }

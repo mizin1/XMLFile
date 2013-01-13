@@ -1,11 +1,12 @@
 package pl.waw.mizinski.xmlproperties.lexer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
 import pl.waw.mizinski.xmlproperties.lexer.token.AttributeName;
@@ -20,6 +21,10 @@ import pl.waw.mizinski.xmlproperties.lexer.token.Token;
 
 public class LexerTest
 {
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
+	
 	@Test
 	public void testLexer() throws XMLParseException
 	{
@@ -44,15 +49,20 @@ public class LexerTest
 	}
 
 	@Test
-	public void shouldRaiseException(){
-		try{
-			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>rihgofeiuhvnuieh";
-			new Lexer(xml);
-			fail();
-		}
-		catch (XMLParseException e)
-		{
-			e.printStackTrace();
-		}
+	public void shouldRaiseException() throws Exception
+	{
+		expectedException.expect(XMLParseException.class);
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>rihgofeiuhvnuieh";
+		new Lexer(xml);
+	}
+	
+	@Test
+	public void shouldProcessSpecialCharacters() throws Exception
+	{
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><element name=\"&amp&lt&gt&quot&apos\">&amp&lt&gt&quot&apos</element>";
+		Lexer lexer = new Lexer(xml);
+		List<Token> tokens = lexer.getTokens();
+		assertEquals("&<>\"'", tokens.get(4).getValue());
+		assertEquals("&<>\"'", tokens.get(6).getValue());
 	}
 }

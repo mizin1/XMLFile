@@ -1,6 +1,6 @@
-package pl.waw.mizinski.xmlproperties;
+package pl.waw.mizinski.xmlproperties.xml;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,6 @@ import org.junit.Test;
 import pl.waw.mizinski.xmlproperties.lexer.Lexer;
 import pl.waw.mizinski.xmlproperties.lexer.token.Token;
 import pl.waw.mizinski.xmlproperties.parser.Parser;
-import pl.waw.mizinski.xmlproperties.xml.XMLFile;
 
 public class XMLTest
 {
@@ -25,8 +24,9 @@ public class XMLTest
 		Parser parser = new Parser(tokens);
 		XMLFile file = parser.getXMLFile();
 		System.out.println(file.getContent());
-		assertEquals(135,file.getContent().length());
+		assertEquals(136,file.getContent().length());
 	}
+
 	
 	private String getFileContent(String fileName) throws FileNotFoundException
 	{

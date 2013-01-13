@@ -38,14 +38,14 @@ public class PropertiesService
 		return service;
 	}
 
-	PropertiesFile getPropertiesFile(String content) throws XMLParseException, InvalidXMLContentExcepcion
+	public PropertiesFile getPropertiesFile(String content) throws XMLParseException, InvalidXMLContentExcepcion
 	{
 		XMLFile xmlFile = generateXMLFileFromString(content);
 		PropertiesFile propertiesFile = generatePropertiesFileFromXMLFile(xmlFile);
 		return propertiesFile;
 	}
 
-	PropertiesFile getPropertiesFile(File file) throws XMLParseException, InvalidXMLContentExcepcion, FileNotFoundException
+	public PropertiesFile getPropertiesFile(File file) throws XMLParseException, InvalidXMLContentExcepcion, FileNotFoundException
 	{
 		String content = getFileContent(file);
 		return getPropertiesFile(content);
@@ -55,14 +55,19 @@ public class PropertiesService
 	{
 		return new PropertiesFileImpl();
 	}
+	
+	public Section createNewSection(String sectionName)
+	{
+		return new SectionImpl(sectionName);
+	}
 
-	String serailizePropertiesFile(PropertiesFile propertiesFile)
+	public String serailizePropertiesFile(PropertiesFile propertiesFile)
 	{
 		XMLFile xmlFile = generateXMLFileFromPropertiefile(propertiesFile);
 		return xmlFile.getContent();
 	}
 
-	void savePropertiesFile(PropertiesFile propertiesFile, File file) throws FileNotFoundException
+	public void savePropertiesFile(PropertiesFile propertiesFile, File file) throws FileNotFoundException
 	{
 		String fileContent = serailizePropertiesFile(propertiesFile);
 		saveContentToFile(fileContent,file);
@@ -93,12 +98,12 @@ public class PropertiesService
 	private Section generateSectionFromXMLElement(XMLElement element)
 	{
 		Section section = new SectionImpl();
-		String name = element.getName();
+		String name = element.getAttributes().get(0).getValue();
 		section.setName(name);
 		for (XMLElement xmlElement : element.getChildElements())
 		{
 			Property property = generatePropertyFromXMLElement(xmlElement);
-			section.setPropertry(property);
+			section.setProperty(property);
 		}
 		return section;
 	}
@@ -143,17 +148,6 @@ public class PropertiesService
 	{
 		checkName("property", xmlElement);
 		checkHasNameAttribute(xmlElement);
-		checkPropertyValue(xmlElement);
-	}
-
-	private void checkPropertyValue(XMLElement xmlElement) throws InvalidXMLContentExcepcion
-	{
-		if (xmlElement.getValue() == null)
-		{
-			throw new InvalidXMLContentExcepcion(String.format("Property with name: '%s' has no value", xmlElement
-					.getAttributes().get(0).getValue()));
-		}
-
 	}
 
 	private void checkHasNameAttribute(XMLElement xmlElement) throws InvalidXMLContentExcepcion
@@ -195,7 +189,7 @@ public class PropertiesService
 
 	private void checkHasNullValue(XMLElement xmlElement) throws InvalidXMLContentExcepcion
 	{
-		if(xmlElement.getValue() == null)
+		if(xmlElement.getValue() != null)
 		{
 			throw new InvalidXMLContentExcepcion(String.format(
 					"Element with name: '%s' should not have value(shoud have list of elements instead)",xmlElement.getName()));
@@ -204,7 +198,7 @@ public class PropertiesService
 
 	private void checkName(String expectedName, XMLElement xmlElement) throws InvalidXMLContentExcepcion
 	{
-		if(xmlElement.getName().equals(expectedName))
+		if(!xmlElement.getName().equals(expectedName))
 		{
 			throw new InvalidXMLContentExcepcion(String.format(
 					"Element with name: '%s' expected('%s' found)",expectedName,xmlElement.getName()));

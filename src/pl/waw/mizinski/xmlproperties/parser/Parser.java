@@ -32,8 +32,22 @@ public class Parser
 
 	public Parser(List<Token> tokens) throws XMLParseException
 	{
-		this.tokens = tokens;
-		parse();
+		try
+		{
+			this.tokens = tokens;
+			parse();
+		}
+		catch (Exception e)
+		{
+			if(e.getClass().equals(XMLParseException.class))
+			{
+				throw e;
+			}
+			else
+			{
+				throw new XMLParseException(e);
+			}
+		}
 	}
 
 	public XMLFile getXMLFile()

@@ -1,5 +1,6 @@
 package pl.waw.mizinski.xmlproperties.properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.waw.mizinski.xmlproperties.exceptions.CanNotUpdateElementException;
@@ -7,7 +8,7 @@ import pl.waw.mizinski.xmlproperties.exceptions.MissingObjectException;
 
 public class PropertiesFileImpl implements PropertiesFile
 {
-	List<Section> sections;
+	List<Section> sections = new ArrayList<>();
 
 	@Override
 	public List<Section> getSections()

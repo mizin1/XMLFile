@@ -100,7 +100,7 @@ public class Lexer
 		return c == '"' | c == '\'';
 	}
 
-	private void expectText()
+	private void expectText() throws XMLParseException
 	{
 		StringBuilder value = new StringBuilder();
 		while (getNextChar() != '<')
@@ -114,14 +114,14 @@ public class Lexer
 				value.append(popNextChar());
 			}
 		}
+		removeWhiteCharactersFromEnd(value);
 		Text text = new Text();
 		text.setValue(value.toString());
 		tokens.add(text);
 	}
 
-	private void expectAttributeName()
+	private void expectAttributeName() throws XMLParseException
 	{
-		// TODO mozesz dorobic inna obsluge pierwszego znaku w nazwie
 		StringBuilder name = new StringBuilder();
 		while (!isWhiteCharacter(getNextChar()) && getNextChar() != '=')
 		{
@@ -139,7 +139,7 @@ public class Lexer
 		tokens.add(attributeName);
 	}
 
-	private void expectAttributeValue()
+	private void expectAttributeValue() throws XMLParseException
 	{
 		StringBuilder value = new StringBuilder();
 		char endingChar = popNextChar();
@@ -265,11 +265,55 @@ public class Lexer
 		popNextChar();
 	}
 
-	private char processSpecialCharacter()
+	private char processSpecialCharacter() throws XMLParseException
 	{
-		// TODO
 		popNextChar();
-		return '&';
+		char c = getNextChar();
+		switch (c)
+		{
+			case 'a':
+				char a = popNextChar();
+				char m = popNextChar();
+				char p = popNextChar();
+				if (a == 'a' && m == 'm' && p == 'p')
+				{
+					return '&';
+				}
+				char pp = m;
+				char o = p;
+				char s = popNextChar();
+				if(a == 'a' && pp == 'p' && o == 'o' && s == 's')
+				{
+					return '\'';
+				}
+				break;
+			case 'l':
+				char l = popNextChar();
+				char t = popNextChar();
+				if (l == 'l' && t == 't')
+				{
+					return '<';
+				}
+				break;
+			case 'g':
+				char g = popNextChar();
+				t = popNextChar();
+				if (g == 'g' && t =='t')
+				{
+					return '>';
+				}
+				break;
+			case 'q':
+				char q = popNextChar();
+				char u = popNextChar();
+				o = popNextChar();
+				t = popNextChar();
+				if(q == 'q' && u == 'u' && o == 'o' && t =='t')
+				{
+					return '"';
+				}
+		}
+		throw new XMLParseException("Ivalid content found after '&' character");
 	}
 	
 	private void checkName(String name) throws XMLParseException
@@ -277,6 +321,14 @@ public class Lexer
 		if (name == null || name.equals(""))
 		{
 			throw new XMLParseException(String.format("Element name is expected at position: '%d'", position));
+		}
+	}
+	
+	private void removeWhiteCharactersFromEnd(StringBuilder builder)
+	{
+		while(isWhiteCharacter(builder.charAt(builder.length()-1)))
+		{
+			builder.deleteCharAt(builder.length()-1);
 		}
 	}
 }
