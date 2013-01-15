@@ -1,5 +1,7 @@
 package pl.waw.mizinski.xmlproperties.xml;
 
+import pl.waw.mizinski.xmlproperties.utils.Utils;
+
 public class XMLAttributeImpl implements XMLAttribute
 {
 	
@@ -72,9 +74,9 @@ public class XMLAttributeImpl implements XMLAttribute
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append(name);
+		builder.append(Utils.formatStringToXML(name));
 		builder.append("=\"");
-		builder.append(value);
+		builder.append(Utils.formatStringToXML(value));
 		builder.append("\"");
 		return builder.toString();
 	}

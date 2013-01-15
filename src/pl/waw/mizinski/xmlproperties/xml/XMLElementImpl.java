@@ -5,6 +5,7 @@ import java.util.List;
 
 import pl.waw.mizinski.xmlproperties.exceptions.CanNotUpdateElementException;
 import pl.waw.mizinski.xmlproperties.exceptions.MissingObjectException;
+import pl.waw.mizinski.xmlproperties.utils.Utils;
 
 public class XMLElementImpl implements XMLElement
 {
@@ -202,7 +203,7 @@ public class XMLElementImpl implements XMLElement
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("<");
-		builder.append(name);
+		builder.append(Utils.formatStringToXML(name));
 		builder.append(" ");
 		for(XMLAttribute attribute : attributes)
 		{
@@ -224,10 +225,10 @@ public class XMLElementImpl implements XMLElement
 			}
 			else
 			{
-				builder.append(value);
+				builder.append(Utils.formatStringToXML(value));
 			}
 			builder.append("</");
-			builder.append(name);
+			builder.append(Utils.formatStringToXML(name));
 			builder.append(">");
 		}
 		return builder.toString();

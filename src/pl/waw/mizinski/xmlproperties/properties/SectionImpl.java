@@ -94,6 +94,7 @@ public class SectionImpl implements Section
 			if (localProperty.getName().equals(property.getName()))
 			{
 				properties.remove(localProperty);
+				return;
 			}
 		}
 		throw new MissingObjectException(String.format("Can not find propertry with name '%s'", property.getName()));
@@ -107,6 +108,7 @@ public class SectionImpl implements Section
 			if (localProperty.getName().equals(propertyName))
 			{
 				properties.remove(localProperty);
+				return;
 			}
 		}
 		throw new MissingObjectException(String.format("Can not find propertry with name '%s'", propertyName));
