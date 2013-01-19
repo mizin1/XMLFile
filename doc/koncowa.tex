@@ -6,7 +6,7 @@
 \usepackage{indentfirst}
 \usepackage{listings}
 \author{Konrad Miziński}
-\title{Projekt TKOM - Dokumentacja wspępna}
+\title{Projekt TKOM - Dokumentacja}
 \hyphenation{XMLFile XMLElement}
 \hyphenpenalty=9000
 
@@ -43,16 +43,16 @@ Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
 	sekcje przez klasy implementujące interfejs Section,
 	a właściwości przez klasy imlementujące intefejs Property;
 	Kody źródłowe tych interfejsów zostały zamieszczone w dalszej części dokumentacji.
-	\item Dostęp do klasy reprezentującej plik właściwości można uzyskać za pomocą obiektu typu
-	"Factory", udostępniającego metody tworzące obiekty typu PropertiesFile.
-	Ta sama klasa odpowiada za zapis obiektów PropertiesFile do pliku. 
+	\item Dostęp do klasy reprezentującej plik właściwości można uzyskać za pomocą obiektu serwisowgo,
+	udostępniającego metody odczytujące zapisujące do pliku *.xml obiekty typu PropertiesFile.
+	\item Za tworzenie obiektów klasy PreprtiesFile odpowiada osobna klasa pełniąca rolę fabryki obiektów.
 	\item Do biblioteki dołączona jest dokumentacja wygenerowana przez javadoc.
 \end{itemize}
 
 \section{Wymiagania niefunkcjonalne}
 \begin{itemize}
-	\item Biblioteka dostarczona zostanie w postaci archiwum typu JAR.
-	\item Wraz z biblioteką dostarczony zostanie prosty program demonstrujący możliwości biblioteki.
+	\item Biblioteka jest dostarczona w postaci archiwum typu JAR.
+	\item Wraz z biblioteką jest dostarczony prosty program demonstrujący możliwości biblioteki(w postaci wykonywlnego plku JAR).
 	Program bedzie pracował w trybie tekstowym.
 \end{itemize}
 
@@ -63,7 +63,7 @@ Celem projektu jest dostarczenie zestawu klas języka Java pozwalających na:
 \section{Projekt realizacji}
 
 \subsection{Podział na moduły}
-Biblioteka bedzie składała się z 2 podstawowych modułów:
+Biblioteka  składa się z 2 podstawowych modułów:
 \begin{itemize}
 	\item Moduł obsługi plików xml - oddpowiada za analizę leksykalną i składniową plików xml.
 	Służy do tworzenia struktur danych odpowiadających poszczególnym składowym drzewa xml.
@@ -102,15 +102,9 @@ W poniższej tabeli zamieszczono rozpoznawane przez lexer tokeny wraz z przykła
     \end{tabular}
 \end{center}
 
-Nazwy elemetów i atrybutów powinny spełniać następujące wyrażenie\\
-regularne:
-\begin{verbatim}
-[a-ZA-Z]([a-zA-Z] | [0-9] | '.' | '-' | '_')*
-\end{verbatim} 
-Zaś wartości elementów(token ''Text''):
-\begin{verbatim}
-([a-zA-Z] | [0-9] | '.' | '-' | '_')*
-\end{verbatim}
+Dopuszcza się stosowanie znaków specjalnych takich jak <, >, '' , ', \&  zapisanych jako odpowiednio:
+\&lt, \&gt, \&quot, \&apos, \&amp
+
 Przyporządkowanie lexemów do tokenów nie zależy tylko od spełnienia wyrażenia regularnego, ale również od stanu w jakim znajdował się lexer po dopasowaniu ostatniego lexema
 (np. rozpoznanie tokena ''Text'' może mastąpić tylko jeśli poprzednio został rozpoznany token ''CloseTag'').
 
@@ -121,24 +115,24 @@ Parser stara się utworzyć drzewo składni na podstawie następującej gramatyk
 
 \begin{verbatim} 
 	Document = Prolog, Element;
-	Element	= EmptyElementTag | StartTag, Content, EndTag;
-	EmptyElementTag = OpenStartTag, {Attribute}, CloseEmptyElementTag;
+	Element	= OpenStartTag, {Attribute}, (CloseTag, Content, EndTag) | CloseEmptyElementTag
 	Attribute = AttributeName, Equals, AttributeValue;
 	StartTag = OpenStartTag, {Attribute}, CloseTag;
 	EndTag = OpenEndTag, CloseTag;
 	Content	= {Element} | Text;
 \end{verbatim}
 	
-Elementy drzewa xml będą opakowane w klasy o następujących interfejsach:
+Elementy drzewa xml są opakowane w klasy o następujących interfejsach:
 \lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/xml/XMLElement.java}
 \lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/xml/XMLAttribute.java}
 
 \subsection{Moduł API użytkownika}
 Moduł ten ma za zadanie dostarczyć użytkownikowi klas pozwalających dodawać/usuwać/edytować
 właściwości zawarte w pliku konfiguracyjnym.
-Wykonuje on swoje zadania poprzez delegację do obiektów modułu pierwszego,
-ukrywając tym samym przez użytkownikiem strukturę pliku xml.
-Klasy wchodzące w skład tego modułu bedą implementowały następujące interfejsy:
+Buduje on swoje klasy w oparciu o dane odczytne z plików i zapisane w klasach modułu pierwszego.
+Podczas zapisu do pliku dane najpierw są zamienieniane na klasy plików xml(klasy modułu pierwszego),
+a następnie zapisywane na dysk. Fakt korzystania z formatu xml jakie prawie całkowicie ukryty przed użytkownikiem.
+Klasy wchodzące w skład tego modułu implementują następujące interfejsy:
 \lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/properties/PropertiesFile.java}
 \newpage
 \lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/properties/Section.java}

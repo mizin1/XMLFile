@@ -13,6 +13,7 @@ import pl.waw.mizinski.xmlproperties.properties.Section;
 public class ServiceTest
 {
 	PropertiesService service = PropertiesService.getInstance();
+	PropertiesObjectsFactory factory = PropertiesObjectsFactory.getInstance();
 
 	@Test
 	public void shouldReadFromFile() throws Exception
@@ -51,8 +52,8 @@ public class ServiceTest
 	public void shouldCreateEmptyPrpertiesFile() throws Exception
 	{
 		String expectedContent = "<?xml version=\"1.0\" encoding=\"ASCII\" ?><properties ><section name=\"sekcja1\" ><property name=\"test\" >true</property></section></properties>";
-		PropertiesFile propertiesFile = PropertiesObjectsFactory.createEmptyPropertiesFile();
-		Section section = PropertiesObjectsFactory.createEmptySection("sekcja1");
+		PropertiesFile propertiesFile = factory.createEmptyPropertiesFile();
+		Section section = factory.createEmptySection("sekcja1");
 		section.setProperty("test", "true");
 		propertiesFile.addSection(section);
 		String content = service.serailizePropertiesFile(propertiesFile);

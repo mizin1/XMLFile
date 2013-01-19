@@ -9,22 +9,33 @@ import pl.waw.mizinski.xmlproperties.properties.SectionImpl;
 
 public class PropertiesObjectsFactory
 {
-	public static PropertiesFile createEmptyPropertiesFile()
+	private PropertiesObjectsFactory()
+	{
+	}
+
+	private static PropertiesObjectsFactory factory = new PropertiesObjectsFactory();
+
+	public static PropertiesObjectsFactory getInstance()
+	{
+		return factory;
+	}
+
+	public PropertiesFile createEmptyPropertiesFile()
 	{
 		return new PropertiesFileImpl();
 	}
-	
-	public static Section createEmptySection(String sectionName)
+
+	public Section createEmptySection(String sectionName)
 	{
 		return new SectionImpl(sectionName);
 	}
-	
-	public static Property createProperty(String name)
+
+	public Property createProperty(String name)
 	{
 		return new PropertyImpl(name);
 	}
-	
-	public static Property createProperty(String name, String value)
+
+	public Property createProperty(String name, String value)
 	{
 		return new PropertyImpl(name, value);
 	}
