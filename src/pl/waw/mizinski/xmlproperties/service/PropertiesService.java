@@ -2,15 +2,14 @@ package pl.waw.mizinski.xmlproperties.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import pl.waw.mizinski.xmlproperties.exceptions.InvalidXMLContentExcepcion;
 import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
 import pl.waw.mizinski.xmlproperties.lexer.Lexer;
-import pl.waw.mizinski.xmlproperties.lexer.token.Token;
 import pl.waw.mizinski.xmlproperties.parser.Parser;
 import pl.waw.mizinski.xmlproperties.properties.PropertiesFile;
 import pl.waw.mizinski.xmlproperties.properties.PropertiesFileImpl;
@@ -38,17 +37,13 @@ public class PropertiesService
 		return service;
 	}
 
-	public PropertiesFile getPropertiesFile(String content) throws XMLParseException, InvalidXMLContentExcepcion
+	public PropertiesFile getPropertiesFile(File file) throws IOException, XMLParseException, InvalidXMLContentExcepcion
 	{
-		XMLFile xmlFile = generateXMLFileFromString(content);
+		Lexer lexer = new Lexer(file);
+		Parser parser = new Parser(lexer);
+		XMLFile xmlFile = parser.parseXMLFile();
 		PropertiesFile propertiesFile = generatePropertiesFileFromXMLFile(xmlFile);
 		return propertiesFile;
-	}
-
-	public PropertiesFile getPropertiesFile(File file) throws XMLParseException, InvalidXMLContentExcepcion, FileNotFoundException
-	{
-		String content = getFileContent(file);
-		return getPropertiesFile(content);
 	}
 
 	public String serailizePropertiesFile(PropertiesFile propertiesFile)
@@ -63,14 +58,6 @@ public class PropertiesService
 		saveContentToFile(fileContent,file);
 	}
 
-	private XMLFile generateXMLFileFromString(String xml) throws XMLParseException
-	{
-		Lexer lexer = new Lexer(xml);
-		List<Token> tokens = lexer.getTokens();
-		Parser parser = new Parser(tokens);
-		XMLFile xmlFile = parser.getXMLFile();
-		return xmlFile;
-	}
 
 	private PropertiesFile generatePropertiesFileFromXMLFile(XMLFile xmlFile) throws InvalidXMLContentExcepcion
 	{
@@ -217,17 +204,6 @@ public class PropertiesService
 			}
 		}
 		
-	}
-	
-	private String getFileContent(File file) throws FileNotFoundException
-	{
-		Scanner scanner = new Scanner(file);
-		StringBuilder builder = new StringBuilder();
-		while(scanner.hasNextLine())
-		{
-			builder.append(scanner.nextLine());
-		}
-		return builder.toString();
 	}
 	
 	private void saveContentToFile(String content, File file) throws FileNotFoundException

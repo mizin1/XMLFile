@@ -1,18 +1,6 @@
 package pl.waw.mizinski.xmlproperties.lexer.token;
 
-public class OpenStartTag extends OpenTag
-{
-	private String value;
-	
-	@Override
-	public void setValue(String value)
-	{
-		this.value = value;
-	}
+public class OpenStartTag extends Token
 
-	@Override
-	public String getValue()
-	{
-		return value;
-	}
+{
 }

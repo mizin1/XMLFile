@@ -77,36 +77,9 @@ Biblioteka  składa się z 2 podstawowych modułów:
 
 \subsubsection{Analizator leksykalny(Lekser)}
 Lexer ma za zadanie rozbić wczytany z pliku text na leksemy.
-Na ich podstawie zostają ropoznane tokeny, którym w szczególnych przypadkach przypisywane są wartości.
-W poniższej tabeli zamieszczono rozpoznawane przez lexer tokeny wraz z przykładami dla podanego fragmentu pliku xml: 
-\begin{verbatim}
-<?xml version="1.0" encoding="ASCII"?>
-...
-<property name="nazwa">value1</property>
-<property/>
-\end{verbatim} 
-
-\begin{center}
-    \begin{tabular}{ | l | l | l |}
-    \hline  
-    Leksem & Token & Wartość \\ \hline 
-    <property & OpenStartTag & property\\ \hline 
-    <$\backslash$property & OpenEndTag & property\\ \hline 
-    > & CloseTag &\\ \hline 
-    $\backslash$> & CloseEmptyElementTag & \\ \hline 
-    name & AttributeName & name \\ \hline
-    = & Equals & \\ \hline
-    ''nazwa'' & AttributeValue & nazwa \\ \hline
-    value1 & Text & value1  \\ \hline
-    <?xml version=''1.0'' encoding=''ASCI''?> & Prolog &  \\ \hline
-    \end{tabular}
-\end{center}
-
-Dopuszcza się stosowanie znaków specjalnych takich jak <, >, '' , ', \&  zapisanych jako odpowiednio:
-\&lt, \&gt, \&quot, \&apos, \&amp
-
-Przyporządkowanie lexemów do tokenów nie zależy tylko od spełnienia wyrażenia regularnego, ale również od stanu w jakim znajdował się lexer po dopasowaniu ostatniego lexema
-(np. rozpoznanie tokena ''Text'' może mastąpić tylko jeśli poprzednio został rozpoznany token ''CloseTag'').
+Na ich podstawie zostają ropoznane tokeny.
+Rozróżnianie są następujące tokeny: \\
+<?, ?>, <, </, >, /> ,=, ", WhiteCharacter, Letter.
 
 \subsubsection{Analizator składniowy(Parser)}
 Po analizie leksykalnej dane są poddawane analizie składniowej.
@@ -114,14 +87,22 @@ Parser stara się utworzyć drzewo składni na podstawie następującej gramatyk
 (uproszczonej gramatyki drzewa xml):
 
 \begin{verbatim} 
-	Document = Prolog, Element;
-	Element	= OpenStartTag, {Attribute}, (CloseTag, Content, EndTag) | CloseEmptyElementTag
-	Attribute = AttributeName, Equals, AttributeValue;
-	StartTag = OpenStartTag, {Attribute}, CloseTag;
-	EndTag = OpenEndTag, CloseTag;
-	Content	= {Element} | Text;
+	Document = Prolog, [S], Element;
+	Prolog = '<?', Text, S, Attributes, '?>';
+	Element	= '<', Text, Attributes, [S], ('>', Content, EndTag) | '/>';
+	Attributes = {S, Attribute}
+	Attribute = Text, Equals, ", ExtendedText, ";
+	Equals = [S], '=', [S];
+	EndTag = '</', Text, [S], '>';
+	Content = [S],( {Element, [S]} | ExtendedText ),[S] ; 
+	Text = Letter, {Letter};
+	ExtendedText = [ ExtendedLetter, {ExtendedLetter | S} ], ExtendedLetter;
+	ExtendedLetter = Letter | '&amp;' | '&lt;' | '&gt;' | '&quot;' | '&apos;' ;
+	S = WhiteCharacter, {WhiteCharacter};
+	Letter = ? znak ascii z przedziału 0x21-0x7e bez znaków: <, >, ", ', &  ?;
+	WhiteCharacter = ' ' | '\t' | '\n' | '\r';
 \end{verbatim}
-	
+
 Elementy drzewa xml są opakowane w klasy o następujących interfejsach:
 \lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/xml/XMLElement.java}
 \lstinputlisting[language=Java]{../src/pl/waw/mizinski/xmlproperties/xml/XMLAttribute.java}

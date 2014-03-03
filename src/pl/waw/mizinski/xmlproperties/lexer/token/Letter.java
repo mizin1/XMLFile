@@ -1,16 +1,16 @@
 package pl.waw.mizinski.xmlproperties.lexer.token;
 
-public class Text extends Token
+public class Letter extends CharacterToken
 {
-	private String value;
+	private char value;
 	
-	public void setValue(String value)
+	public Letter(char value)
 	{
 		this.value = value;
 	}
 
 	@Override
-	public String getValue()
+	public char getValue()
 	{
 		return value;
 	}

@@ -4,7 +4,7 @@ public class Utils
 {
 	public static String formatStringToXML(String input)
 	{
-		return input.replaceAll("&", "&amp").replaceAll("<", "&lt").
-				replaceAll(">", "&gt").replaceAll("\"", "&quot").replaceAll("'", "&apos");
+		return input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").
+				replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;");
 	}
 }

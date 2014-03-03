@@ -1,334 +1,140 @@
 package pl.waw.mizinski.xmlproperties.lexer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
-import pl.waw.mizinski.xmlproperties.exceptions.XMLParseException;
-import pl.waw.mizinski.xmlproperties.lexer.token.AttributeName;
-import pl.waw.mizinski.xmlproperties.lexer.token.AttributeValue;
-import pl.waw.mizinski.xmlproperties.lexer.token.CloseEmptyElementTag;
-import pl.waw.mizinski.xmlproperties.lexer.token.CloseTag;
-import pl.waw.mizinski.xmlproperties.lexer.token.Equals;
-import pl.waw.mizinski.xmlproperties.lexer.token.OpenEndTag;
-import pl.waw.mizinski.xmlproperties.lexer.token.OpenStartTag;
-import pl.waw.mizinski.xmlproperties.lexer.token.OpenTag;
-import pl.waw.mizinski.xmlproperties.lexer.token.Prolog;
-import pl.waw.mizinski.xmlproperties.lexer.token.Text;
-import pl.waw.mizinski.xmlproperties.lexer.token.Token;
+import pl.waw.mizinski.xmlproperties.lexer.token.*;
 
 public class Lexer
 {
-	private final String text;
+	private InputStream inputStream;
+	private int nextChar;
+	private Token nextToken;
 
-	private List<Token> tokens;
-
-	private int position = 0;
-
-	public Lexer(String text) throws XMLParseException
+	public Lexer(File file) throws IOException
 	{
-		try
-		{
-			this.text = text;
-			tokenize();
-		}
-		catch (Exception e)
-		{
-			throw new XMLParseException(e);
-		}
+		this.inputStream = new FileInputStream(file);
+		this.nextChar = inputStream.read();
 	}
 
-	public List<Token> getTokens()
+	public void skipWhiteSpaces() throws IOException
 	{
-		return tokens;
-	}
-
-	private void tokenize() throws XMLParseException
-	{
-		tokens = new LinkedList<Token>();
-		expectProlog();
-		while (hasMoreLetters())
+		if (nextToken != null && nextToken.getClass().equals(WhiteSpace.class))
 		{
-			char nextChar = getNextChar();
-			if (isWhiteCharacter(nextChar))
+			nextToken = null;
+		}
+		if (nextToken == null)
+		{
+			while (isWhiteCharacter(getNextChar()))
 			{
-				processWhiteCharacter();
-			}
-			else if (nextChar == '<')
-			{
-				expectOpenTag();
-			}
-			else if (nextChar == '>')
-			{
-				expectCloseTag();
-			}
-			else if (shouldExpectText())
-			{
-				expectText();
-			}
-			else if (nextChar == '/')
-			{
-				expectCloseEmptyElementTag();
-			}
-			else if (nextChar == '=')
-			{
-				expectEquals();
-			}
-			else if (shouldExpectAttributeValue(nextChar))
-			{
-				expectAttributeValue();
-			}
-			else
-			{
-				expectAttributeName();
+				popNextChar();
 			}
 		}
 	}
 
-	private boolean hasMoreLetters()
+	public Token getNextToken() throws IOException
 	{
-		return position < text.length();
-	}
-
-	private boolean shouldExpectText()
-	{
-		return CloseTag.class.isInstance(getLastToken());
-	}
-
-	private boolean shouldExpectAttributeValue(char c)
-	{
-		return c == '"' | c == '\'';
-	}
-
-	private void expectText() throws XMLParseException
-	{
-		StringBuilder value = new StringBuilder();
-		while (getNextChar() != '<')
+		if (nextToken == null)
 		{
-			if (getNextChar() == '&')
-			{
-				value.append(processSpecialCharacter());
-			}
-			else
-			{
-				value.append(popNextChar());
-			}
+			nextToken = createNextToken();
 		}
-		removeWhiteCharactersFromEnd(value);
-		Text text = new Text();
-		text.setValue(value.toString());
-		tokens.add(text);
+		return nextToken;
 	}
 
-	private void expectAttributeName() throws XMLParseException
+	public Token popNextToken() throws IOException
 	{
-		StringBuilder name = new StringBuilder();
-		while (!isWhiteCharacter(getNextChar()) && getNextChar() != '=')
+		if (nextToken == null)
 		{
-			if (getNextChar() == '&')
-			{
-				name.append(processSpecialCharacter());
-			}
-			else
-			{
-				name.append(popNextChar());
-			}
-		}
-		AttributeName attributeName = new AttributeName();
-		attributeName.setValue(name.toString());
-		tokens.add(attributeName);
-	}
-
-	private void expectAttributeValue() throws XMLParseException
-	{
-		StringBuilder value = new StringBuilder();
-		char endingChar = popNextChar();
-		while (getNextChar() != endingChar)
-		{
-			if (getNextChar() == '&')
-			{
-				value.append(processSpecialCharacter());
-			}
-			else
-			{
-				value.append(popNextChar());
-			}
-		}
-		popNextChar();
-		AttributeValue attributeValue = new AttributeValue();
-		attributeValue.setValue(value.toString());
-		tokens.add(attributeValue);
-	}
-
-	private void expectEquals()
-	{
-		popNextChar();
-		tokens.add(new Equals());
-	}
-
-	private void expectCloseEmptyElementTag() throws XMLParseException
-	{
-		popNextChar();
-		if (getNextChar() == '>')
-		{
-			popNextChar();
-			tokens.add(new CloseEmptyElementTag());
+			return createNextToken();
 		}
 		else
 		{
-			throw new XMLParseException(String.format("'>' character expected at position: '%d'", position));
+			Token ret = nextToken;
+			nextToken = null;
+			return ret;
 		}
+
 	}
 
-	private void expectCloseTag()
+	private Token createNextToken() throws IOException
 	{
-		popNextChar();
-		tokens.add(new CloseTag());
-	}
+		if (!hasNextChar())
+			return null;
+		char next = popNextChar();
 
-	
-	private void expectOpenTag() throws XMLParseException
-	{
-		popNextChar();
-		OpenTag openTag;
-		if (getNextChar()=='/')
+		if (next == '<')
 		{
-			popNextChar();
-			openTag = new OpenEndTag();
-		}
-		else
-		{
-			openTag = new OpenStartTag();
-		}
-		StringBuilder name = new StringBuilder();
-		while (!isWhiteCharacter(getNextChar()) && getNextChar() != '/' && getNextChar() !='>' )
-		{
-			if (getNextChar() == '&')
+			if (getNextChar() == '/')
 			{
-				name.append(processSpecialCharacter());
+				popNextChar();
+				return new OpenEndTag();
+			}
+			else if (getNextChar() == '?')
+			{
+				popNextChar();
+				return new PrologStart();
 			}
 			else
 			{
-				name.append(popNextChar());
+				return new OpenStartTag();
 			}
-
 		}
-		checkName(name.toString());
-		openTag.setValue(name.toString());
-		tokens.add(openTag);
-	}
-
-	private void expectProlog() throws XMLParseException
-	{
-		char first = popNextChar();
-		char second = popNextChar();
-		if(!(first == '<' && second == '?'))
+		else if (next == '>')
 		{
-			throw new XMLParseException("Prolog is expected at the begining of the document");
+			return new CloseTag();
 		}
-		while(!(first == '?' && second == '>'))
+		else if (next == '/' && getNextChar() == '>')
 		{
-			first = second;
-			second = popNextChar();
+			popNextChar();
+			return new CloseEmptyElementTag();
 		}
-		tokens.add(new Prolog());
+		else if (next == '?' && getNextChar() == '>')
+		{
+			popNextChar();
+			return new PrologEnd();
+		}
+		else if (next == '=')
+		{
+			return new Equals();
+		}
+		else if (next == '"')
+		{
+			return new QuotationMark();
+		}
+		else if (isWhiteCharacter(next))
+		{
+			return new WhiteSpace();
+		}
+		else
+		{
+			return new Letter(next);
+		}
 	}
 
 	private char getNextChar()
 	{
-		return text.charAt(position);
+		return (char) nextChar;
 	}
 
-	private char popNextChar()
+	private char popNextChar() throws IOException
 	{
-		return text.charAt(position++);
+		char tmp = (char) nextChar;
+		nextChar = inputStream.read();
+		return tmp;
 	}
 
-	private Token getLastToken()
+	private boolean hasNextChar()
 	{
-		if (tokens.isEmpty())
-		{
-			return null;
-		}
-		int size = tokens.size();
-		return tokens.get(size - 1);
+		return nextChar != -1;
 	}
 
-	private static boolean isWhiteCharacter(char c)
+	public static boolean isWhiteCharacter(char c)
 	{
-		List<Character> whiteCharacters = Arrays.asList(' ', '\t', '\n', '\r'); 
+		List<Character> whiteCharacters = Arrays.asList(' ', '\t', '\n', '\r');
 		return whiteCharacters.contains(c);
-	}
-
-	private void processWhiteCharacter()
-	{
-		popNextChar();
-	}
-
-	private char processSpecialCharacter() throws XMLParseException
-	{
-		popNextChar();
-		char c = getNextChar();
-		switch (c)
-		{
-			case 'a':
-				char a = popNextChar();
-				char m = popNextChar();
-				char p = popNextChar();
-				if (a == 'a' && m == 'm' && p == 'p')
-				{
-					return '&';
-				}
-				char pp = m;
-				char o = p;
-				char s = popNextChar();
-				if(a == 'a' && pp == 'p' && o == 'o' && s == 's')
-				{
-					return '\'';
-				}
-				break;
-			case 'l':
-				char l = popNextChar();
-				char t = popNextChar();
-				if (l == 'l' && t == 't')
-				{
-					return '<';
-				}
-				break;
-			case 'g':
-				char g = popNextChar();
-				t = popNextChar();
-				if (g == 'g' && t =='t')
-				{
-					return '>';
-				}
-				break;
-			case 'q':
-				char q = popNextChar();
-				char u = popNextChar();
-				o = popNextChar();
-				t = popNextChar();
-				if(q == 'q' && u == 'u' && o == 'o' && t =='t')
-				{
-					return '"';
-				}
-		}
-		throw new XMLParseException("Ivalid content found after '&' character");
-	}
-	
-	private void checkName(String name) throws XMLParseException
-	{
-		if (name == null || name.equals(""))
-		{
-			throw new XMLParseException(String.format("Element name is expected at position: '%d'", position));
-		}
-	}
-	
-	private void removeWhiteCharactersFromEnd(StringBuilder builder)
-	{
-		while(isWhiteCharacter(builder.charAt(builder.length()-1)))
-		{
-			builder.deleteCharAt(builder.length()-1);
-		}
 	}
 }
